@@ -8,9 +8,11 @@ export default function useAddresses() {
     const errors = ref('')
     const router = useRouter()
 
-    const filterAddresses = async (filters) => {
+    const filterAddresses = async (query) => {
         let response = await axios.get('/api/addresses/search', {
-            params: filters
+            params: {
+                q: query
+            }
         })
         addresses.value = response.data
     }
