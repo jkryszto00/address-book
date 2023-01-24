@@ -4,32 +4,27 @@ import { NAutoComplete, NCard, NList, NListItem, NThing } from 'naive-ui'
 
 import useAddresses from "../composables/addresses"
 import usePlacematic from "../3rd/placematic"
-import {isEmpty} from "lodash";
+import {debounce} from "lodash";
 
 const { addresses, filterAddresses } = useAddresses()
 const { addressSuggestions, getAddressSuggestions } = usePlacematic()
 
 const search = ref('')
 
-const searchAddress = async (e) => filterAddresses(e)
-
 onMounted(async () => await filterAddresses(null))
 
-watch(search, (newSearch) => {
+watch(search, debounce((newSearch) => {
     getAddressSuggestions(newSearch)
-
-    if (isEmpty(newSearch)) {
-        filterAddresses(null)
-    }
-})
+    filterAddresses(newSearch)
+}, 250))
 </script>
 <template>
     <n-card title="Addresses">
         <template #header>
             <n-auto-complete
+                placeholder="Search address"
                 v-model:value="search"
                 :clearable="true"
-                @select="searchAddress"
                 :options="addressSuggestions"
             />
         </template>
