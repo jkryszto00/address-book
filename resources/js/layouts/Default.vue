@@ -1,6 +1,6 @@
 <script setup>
 import { useStore } from 'vuex'
-import { computed } from "vue";
+import { computed } from 'vue'
 
 const store = useStore()
 
@@ -20,9 +20,14 @@ function logout() {
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <router-link :to="{ name:'Index' }" class="nav-link">Add address</router-link>
-                    </li>
+                    <template v-if="isAuthenticated">
+                        <li class="nav-item">
+                            <router-link :to="{ name:'AddressMyList' }" class="nav-link">My addresses</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="{ name:'AddressAdd' }" class="nav-link">Users</router-link>
+                        </li>
+                    </template>
                 </ul>
                 <div class="d-flex">
                     <ul class="navbar-nav">
