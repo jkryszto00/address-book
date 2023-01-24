@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
+import store from "../store";
 
 const Index = () => import('@/pages/Index.vue');
 
@@ -22,33 +23,39 @@ const routes = [
             {
                 name: 'Login',
                 path: '/login',
-                component: Login
+                component: Login,
+                meta: { requiresAuth: false }
             },
             {
                 name: 'Register',
                 path: '/register',
-                component: Register
+                component: Register,
+                meta: { requiresAuth: false }
             },
             {
                 name: 'Index',
                 path: '/',
                 component: Index,
+                meta: { requiresAuth: false }
             },
             {
                 name: 'AddressList',
                 path: '/address/list',
-                component: AddressList
+                component: AddressList,
+                meta: { requiresAuth: true }
             },
             {
                 name: 'AddressAdd',
                 path: '/address/add',
-                component: AddressAdd
+                component: AddressAdd,
+                meta: { requiresAuth: true }
             },
             {
                 name: 'AddressEdit',
                 path: '/address/:id/edit',
                 component: AddressEdit,
-                props: true
+                props: true,
+                meta: { requiresAuth: true }
             }
         ]
     }
@@ -57,6 +64,18 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (!store.getters["auth/authenticated"]) {
+            next({ path: '/login' })
+        }
+
+        next()
+    }
+
+    next()
 })
 
 export default router
