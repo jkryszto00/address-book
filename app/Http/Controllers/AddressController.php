@@ -18,10 +18,7 @@ class AddressController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $addresses = match ($request->get('my')) {
-            'on' => $request->user()->addresses,
-            default => Address::all()
-        };
+        $addresses = Address::all();
 
         return response()->json(AddressResource::collection($addresses));
     }
