@@ -18,7 +18,13 @@ class AddressController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $addresses = Address::all();
+        $user = $request->user();
+
+        if ($user->hasRole('administrator')) {
+            $addresses = Address::all();
+        } else {
+            $addresses = $user->addresses;
+        }
 
         return response()->json(AddressResource::collection($addresses));
     }
