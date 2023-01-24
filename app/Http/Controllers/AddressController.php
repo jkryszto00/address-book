@@ -11,9 +11,15 @@ use Illuminate\Http\Response;
 
 class AddressController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Address::class, 'address');
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -37,7 +43,7 @@ class AddressController extends Controller
      */
     public function store(AddressRequest $request): JsonResponse
     {
-        $address = Address::create([...$request->validated(), 'user_id' => auth()->id()]);
+        $address = Address::create([...$request->validated(), 'user_id' => $request->user()->id]);
 
         return response()->json(new AddressResource($address));
     }
