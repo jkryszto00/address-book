@@ -22,10 +22,7 @@ function logout() {
                 <ul class="navbar-nav me-auto">
                     <template v-if="isAuthenticated">
                         <li class="nav-item">
-                            <router-link :to="{ name:'AddressMyList' }" class="nav-link">My addresses</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name:'AddressAdd' }" class="nav-link">Users</router-link>
+                            <router-link :to="{ name:'AddressList' }" class="nav-link">My addresses</router-link>
                         </li>
                     </template>
                 </ul>
@@ -54,7 +51,7 @@ function logout() {
             </div>
         </div>
     </nav>
-    <main class="container mt-3">
+    <main class="container mt-5">
         <router-view></router-view>
     </main>
 </template>

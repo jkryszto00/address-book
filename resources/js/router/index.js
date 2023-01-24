@@ -7,8 +7,7 @@ const Login = () => import('@/pages/Auth/Login.vue');
 const Register = () => import('@/pages/Auth/Register.vue');
 
 /* Address */
-const AddressMyList = () => import('@/pages/Address/List.vue');
-const AddressAllList = () => import('@/pages/Admin/Address/List.vue');
+const AddressList = () => import('@/pages/Address/List.vue');
 const AddressAdd = () => import('@/pages/Address/Add.vue');
 const AddressEdit = () => import('@/pages/Address/Edit.vue');
 
@@ -36,14 +35,9 @@ const routes = [
                 component: Index,
             },
             {
-                name: 'AddressMyList',
-                path: '/address/my',
-                component: AddressMyList
-            },
-            {
-                name: 'AddressAllList',
-                path: '/address/all',
-                component: AddressAllList
+                name: 'AddressList',
+                path: '/address/list',
+                component: AddressList
             },
             {
                 name: 'AddressAdd',
