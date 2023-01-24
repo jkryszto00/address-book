@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('address', \App\Http\Controllers\AddressController::class);
+Route::apiResource('addresses', \App\Http\Controllers\AddressController::class);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', \App\Http\Controllers\UserController::class);
