@@ -4,21 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddressRequest;
 use App\Http\Resources\AddressResource;
+use App\Mail\AddressAdded;
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 
 class AddressController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Address::class, 'address');
+    }
+
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
-        $addresses = Address::all();
+        $user = $request->user();
+
+        if ($user->hasRole('administrator')) {
+            $addresses = Address::all();
+        } else {
+            $addresses = $user->addresses;
+        }
 
         return response()->json(AddressResource::collection($addresses));
     }
@@ -31,7 +46,11 @@ class AddressController extends Controller
      */
     public function store(AddressRequest $request): JsonResponse
     {
-        $address = Address::create([...$request->validated(), 'user_id' => auth()->id()]);
+        $address = Address::create([...$request->validated(), 'user_id' => $request->user()->id]);
+
+        foreach (User::all() as $recipient) {
+            Mail::to($recipient)->send(new AddressAdded());
+        }
 
         return response()->json(new AddressResource($address));
     }
