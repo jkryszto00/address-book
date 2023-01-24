@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 export default function useAddresses() {
     const addresses = ref([])
     const address = ref([])
+    const errors = ref('')
     const router = useRouter()
 
     const getAddresses = async () => {
@@ -13,18 +14,44 @@ export default function useAddresses() {
     }
 
     const getAddress = async (id) => {
-        let response = await axios.get('/api/addresses/' + id)
-        address.value = response.data
+        try {
+            let response = await axios.get('/api/addresses/' + id)
+            address.value = response.data
+        } catch (e) {
+            if (e.response.status === 404 || e.response.status === 403) {
+                router.go(-1)
+            }
+        }
     }
 
     const storeAddress = async (payload) => {
-        await axios.post('/api/addresses', payload)
-        await router.push({ name: 'AddressMyList' })
+        errors.value = ''
+
+        try {
+            await axios.post('/api/addresses', payload)
+            await router.push({ name: 'AddressMyList' })
+        } catch (e) {
+            if (e.response.status === 422) {
+                errors.value = e.response.data.errors
+            }
+        }
     }
 
     const updateAddress = async (id) => {
-        await axios.put('/api/addresses/' + id, address.value)
-        await router.push({ name: 'AddressMyList' })
+        errors.value = ''
+
+        try {
+            await axios.put('/api/addresses/' + id, address.value)
+            await router.push({ name: 'AddressMyList' })
+        } catch (e) {
+            if (e.response.status === 404) {
+                router.go(-1)
+            }
+
+            if (e.response.status === 422) {
+                errors.value = e.response.data.errors
+            }
+        }
     }
 
     const destroyAddress = async (id) => {
