@@ -21,7 +21,7 @@ return [
             'users' => 'r,u'
         ],
         'user' => [
-            'addresses' => 'r,u',
+            'addresses' => 'c,r,u',
         ]
     ],
 

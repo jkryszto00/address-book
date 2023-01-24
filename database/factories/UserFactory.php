@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -36,5 +37,27 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function superadmin(): UserFactory
+    {
+        return $this->assignRole('superadministrator');
+    }
+
+    public function admin(): UserFactory
+    {
+        return $this->assignRole('administrator');
+    }
+
+    public function configure()
+    {
+        return $this->afterMaking(function (User $user) {
+            return $user->attachRole('user');
+        });
+    }
+
+    private function assignRole(string $role): UserFactory
+    {
+        return $this->afterCreating(fn (User $user) => $user->attachRole($role));
     }
 }
