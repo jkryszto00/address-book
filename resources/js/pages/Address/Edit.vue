@@ -20,15 +20,15 @@ const rules = {
     },
     street: {
         required: true,
-        message: 'Street number is required'
+        message: 'Street is required'
     },
     city: {
         required: true,
-        message: 'City number is required'
+        message: 'City is required'
     },
     zip: {
         required: true,
-        message: 'Zip number is required'
+        message: 'Zip is required'
     }
 }
 

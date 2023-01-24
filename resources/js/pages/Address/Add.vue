@@ -1,17 +1,18 @@
 <script setup>
-import { watch, reactive, ref } from "vue";
-import { NCard, NButton, NForm, NFormItem, NAutoComplete, NGrid, NGi } from 'naive-ui'
-import { isEmpty } from "lodash";
-
+import { reactive, ref } from "vue";
+import { NCard, NButton, NForm, NFormItem, NInput, NGrid, NGi } from 'naive-ui'
 import useAddresses from "../../composables/addresses"
-import usePlacematic from "../../3rd/placematic"
 
 const { storeAddress } = useAddresses()
-const { addressSuggestions, getAddressSuggestions } = usePlacematic()
 
 const formRef = ref(null)
 
-let form = reactive({})
+const form = reactive({
+    number: '',
+    street: '',
+    city: '',
+    zip: ''
+})
 
 const rules = {
     number: {
@@ -20,15 +21,15 @@ const rules = {
     },
     street: {
         required: true,
-        message: 'Street number is required'
+        message: 'Street is required'
     },
     city: {
         required: true,
-        message: 'City number is required'
+        message: 'City is required'
     },
     zip: {
         required: true,
-        message: 'Zip number is required'
+        message: 'Zip is required'
     }
 }
 
@@ -39,20 +40,6 @@ const addAddress = async (e) => {
         }
     })
 }
-
-const addressQuery = ref()
-
-watch(addressQuery, (query) => {
-    getAddressSuggestions(query)
-})
-
-function setAddressForm(value) {
-    const addressObject = addressSuggestions.value.filter((address) => address.label === value)
-
-    if (!isEmpty(addressObject)) {
-        form = addressObject[0].value
-    }
-}
 </script>
 <template>
     <n-card title="Add address">
@@ -61,14 +48,27 @@ function setAddressForm(value) {
             :model="form"
             :rules="rules"
         >
-            <n-grid x-gap="12" cols="1">
+            <n-grid x-gap="12" cols="2">
                 <n-gi>
-                    <n-form-item label="Address">
-                        <n-auto-complete
-                            v-model:value="addressQuery"
-                            :options="addressSuggestions"
-                            @update:value="setAddressForm"
-                        />
+                    <n-form-item label="Number" path="number">
+                        <n-input v-model:value="form.number" />
+                    </n-form-item>
+                </n-gi>
+                <n-gi>
+                    <n-form-item label="Street" path="street">
+                        <n-input v-model:value="form.street" />
+                    </n-form-item>
+                </n-gi>
+            </n-grid>
+            <n-grid x-gap="12" cols="2">
+                <n-gi>
+                    <n-form-item label="City" path="city">
+                        <n-input v-model:value="form.city" />
+                    </n-form-item>
+                </n-gi>
+                <n-gi>
+                    <n-form-item label="Zip Code" path="zip">
+                        <n-input v-model:value="form.zip" />
                     </n-form-item>
                 </n-gi>
             </n-grid>
