@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $auth = $request->user();
+        $auth = $request->user()->load('roles');
 
         return response()->json(new UserResource($auth));
     }
