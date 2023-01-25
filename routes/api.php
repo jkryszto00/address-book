@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('addresses/search', \App\Http\Controllers\IndexController::class);
-Route::apiResource('addresses', \App\Http\Controllers\AddressController::class);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', \App\Http\Controllers\UserController::class);
+    Route::apiResource('addresses', \App\Http\Controllers\AddressController::class);
 });
