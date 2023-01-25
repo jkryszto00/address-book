@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddressCreated;
 use App\Http\Requests\AddressRequest;
 use App\Http\Resources\AddressResource;
-use App\Mail\AddressAdded;
 use App\Models\Address;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Mail;
 
 class AddressController extends Controller
 {
@@ -30,9 +28,9 @@ class AddressController extends Controller
         $user = $request->user();
 
         if ($user->hasRole('administrator')) {
-            $addresses = Address::all();
+            $addresses = Address::orderBy('id', 'desc')->get();
         } else {
-            $addresses = $user->addresses;
+            $addresses = $user->addresses()->orderBy('id', 'desc')->get();
         }
 
         return response()->json(AddressResource::collection($addresses));
@@ -48,9 +46,7 @@ class AddressController extends Controller
     {
         $address = Address::create([...$request->validated(), 'user_id' => $request->user()->id]);
 
-        foreach (User::all() as $recipient) {
-            Mail::to($recipient)->send(new AddressAdded());
-        }
+        event(new AddressCreated($address));
 
         return response()->json(new AddressResource($address));
     }

@@ -9,8 +9,8 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-
-class AddressAdded extends Mailable
+use App\Models\Address as AddressModel;
+class AddressCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,10 +19,9 @@ class AddressAdded extends Mailable
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public AddressModel $address
+    ){}
 
     /**
      * Get the message envelope.
@@ -33,7 +32,7 @@ class AddressAdded extends Mailable
     {
         return new Envelope(
             from: new Address('info@address-book.test', 'Address Book'),
-            subject: 'Address Added',
+            subject: 'New address added!',
         );
     }
 
